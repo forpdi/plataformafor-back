@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
+    http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd ">
+
+    <changeSet id="V1_008" author="eduardo.sakae">
+        <addColumn tableName="frisco_preventive_action">
+            <column name="validity_begin" type="date">
+                <constraints
+                    nullable="true"
+                />
+            </column>
+        </addColumn>
+        <addColumn tableName="frisco_contingency">
+            <column name="validity_begin" type="date">
+                <constraints
+                    nullable="true"
+                />
+            </column>
+        </addColumn>
+                <addColumn tableName="frisco_preventive_action">
+            <column name="validity_end" type="date">
+                <constraints
+                    nullable="true"
+                />
+            </column>
+        </addColumn>
+        <addColumn tableName="frisco_contingency">
+            <column name="validity_end" type="date">
+                <constraints
+                    nullable="true"
+                />
+            </column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

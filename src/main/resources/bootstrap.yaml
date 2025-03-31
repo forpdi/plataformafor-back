@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    active: ${SPRING_CLOUD_CONFIG_PROFILE:default}
+  cloud:
+    config:
+      uri: http://spring-cloud-config-sever.spring-cloud-config:8080
+      fail-fast: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
+    http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd ">
+
+    <changeSet id="V1_027" author="erick.alves">
+		<createTable tableName="fpdi_region">
+			<column name="id" type="bigint(20)">
+				<constraints primaryKey="true"/>
+			</column>
+			<column name="name" type="varchar(255)">
+				<constraints nullable="false"/>
+	        </column>
+	    </createTable>
+	    
+		<createTable tableName="fpdi_uf">
+			<column name="id" type="bigint(20)">
+				<constraints primaryKey="true"/>
+			</column>
+			<column name="name" type="varchar(255)">
+				<constraints nullable="false"/>
+	        </column>
+			<column name="acronym" type="varchar(2)">
+				<constraints nullable="false"/>
+	        </column>
+			<column name="region_id" type="bigint(20)">
+                <constraints
+					nullable="false"
+					foreignKeyName="FK_xxecRcPeAaJdyoqsB3UiwcG4H"
+					references="fpdi_region(id)"/>
+	        </column>
+	    </createTable>
+	    
+		<createTable tableName="fpdi_county">
+			<column name="id" type="bigint(20)">
+				<constraints primaryKey="true"/>
+			</column>
+			<column name="name" type="varchar(255)">
+				<constraints nullable="false"/>
+	        </column>
+			<column name="uf_id" type="bigint(20)">
+                <constraints
+					nullable="false"
+					foreignKeyName="FK_OsDXgfxXmYmh2uQossJJG0g9a"
+					references="fpdi_uf(id)"/>
+	        </column>
+	    </createTable>
+	    
+        <loadData
+            file="db/locations/regions.csv"
+            tableName="fpdi_region"
+            separator=";"
+            encoding="UTF-8"/>
+        <loadData
+            file="db/locations/ufs.csv"
+            tableName="fpdi_uf"
+            separator=";"
+            encoding="UTF-8"/>
+        <loadData
+            file="db/locations/counties.csv"
+            tableName="fpdi_county"
+            separator=";"
+            encoding="UTF-8"/>
+
+    </changeSet>
+
+</databaseChangeLog>
