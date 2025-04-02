@@ -1,0 +1,25 @@
+@startuml Component Backend Diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Container(frontend, "Single Page Application", "JavaScript e React", "Interface com a qual o usuário interage.")
+
+System_Boundary(backendBoundary, "Backend") {
+	Container(abstractController, "AbstractController", "Spring MVC Controller", "Camada de Controle Abstrata")
+	Container(concreteController, "ConcreteController", "Spring MVC Controller", "Camada de Controle Concreta")
+	Container(businessService, "Business Service Layer", "Camada de Serviço", "Invoca serviços de negócios para processar a lógica.")
+	Container(dataAccessObject, "Data Access Object Layer", "Hibernate", "Camada de Acesso a Dados")
+	Container(securityLayer, "Security Layer",  "Spring Security", "Camada de Segurança")
+	ContainerDb(database, "Banco de Dados Relacional", "MySQL", "Armazena dados persistentes da aplicação.")
+}
+
+Rel(frontend, abstractController, "Envia requisições HTTP")
+Rel_L(abstractController, concreteController, "Estende")
+Rel(concreteController, businessService, "Chama para lógica de negócios")
+Rel(securityLayer, businessService, "Aplica regras de segurança para proteger a lógica de negócios")
+Rel(securityLayer, abstractController, "Valida autenticação e autorização nas requisições HTTP")
+Rel(securityLayer, businessService, "Gera e valida tokens JWT")
+Rel(businessService, dataAccessObject, "Interage para persistência de dados")
+Rel_L(dataAccessObject, database, "Realiza operações CRUD")
+
+SHOW_LEGEND()
+@enduml

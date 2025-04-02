@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
+    http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd ">
+
+	<changeSet id="V1_018" author="gabriel.oliveira">
+		<createTable tableName="frisco_process_objective">
+			<column name="id" type="bigint(20)" autoIncrement="true" generationType="IDENTITY">
+				<constraints primaryKey="true"/>
+			</column>
+			<column name="process_id" type="bigint(20)">
+                <constraints
+					nullable="false"
+					foreignKeyName="FK_tx1yo0eeugjz192UgbMeqcssb"
+					references="frisco_process(id)"/>
+	        </column>
+			<column name="description" type="varchar(4000)">
+				<constraints nullable="true"/>
+	        </column>
+	    </createTable>
+	    
+		<dropNotNullConstraint tableName="frisco_process" columnName="objective" columnDataType="varchar(4000)"/>
+		
+		<createTable tableName="frisco_risk_process_objective">
+			<column name="id" type="bigint(20)" autoIncrement="true" generationType="IDENTITY">
+				<constraints primaryKey="true"/>
+			</column>
+			<column name="risk_id" type="bigint(20)">
+                <constraints
+					nullable="false"
+					foreignKeyName="FK_tx1yo0uiSWgv192UgbMeqcNsb"
+					references="frisco_risk(id)"/>
+	        </column>
+	        <column name="objective_id" type="bigint(20)">
+                <constraints
+					nullable="false"
+					foreignKeyName="FK_tx1yo0uiSWgv192UgbMeqUHbz"
+					references="frisco_process_objective(id)"/>
+	        </column>
+	        <column name="linkFPDI" type="varchar(1000)">
+                <constraints nullable="false"/>
+	        </column>
+	        <column name="deleted" type="bool">
+	        	<constraints nullable="false"/>
+	        </column>
+	    </createTable>
+	    
+	    <sql dbms="mysql, mariadb"
+			endDelimiter="\nGO"
+			splitStatements="true"
+			stripComments="true">
+			insert into frisco_process_objective(process_id, description)
+			select id, objective from frisco_process where deleted = false;
+		</sql>
+	    
+	    <sql dbms="mysql, mariadb"
+			endDelimiter="\nGO"
+			splitStatements="true"
+			stripComments="true">
+			insert into frisco_risk_process_objective (risk_id, objective_id, linkFPDI, deleted)
+			(
+  				select rp.risk_id, po.id, rp.linkFPDI, false
+  				from frisco_risk_process rp
+    			inner join frisco_process_objective po on po.process_id = rp.process_id
+  				where rp.deleted = false
+			);
+		</sql>
+			      
+	</changeSet>
+</databaseChangeLog>

@@ -1,0 +1,138 @@
+application:
+  name: test
+  env:
+    debug: true
+  first-user:
+    cpf: 11111111111
+    email: test.support@rnp.br
+  timeout:
+    reset-password: 14400
+
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+
+management:
+  health:
+    db:
+      enabled: false
+    defaults:
+      enabled: false
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: 'health, prometheus'
+  metrics:
+    export:
+      prometheus:
+        enabled: false
+  endpoint:
+    health:
+      show-details: never
+    metrics:
+      enabled: false
+    prometheus:
+      enabled: false
+
+logging:
+  level:
+    root: info
+    br.rnp: trace
+    org.testcontainers: debug
+    or.springframework.jdbc: debug
+    org.springframework.security: debug
+
+security:
+  aud: asdf
+  iss: asdf
+  authorities: cognito:groups
+  use-local-processor: true
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:postgresql://${DATABASE_HOST_PORT}/${DATABASE_NAME}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    hikari:
+      auto-commit: false
+      connection-init-sql: SELECT 1;
+      connection-test-query: SELECT 1;
+      maximum-pool-size: 1
+      connection-timeout: 30000
+      idleTimeout: 30000
+      minimumIdle: ${IDLE_CONNECTION:1}
+      isolate-internal-queries: true
+    jpa:
+      show-sql: true
+      generate-ddl: false
+      properties:
+        hibernate:
+          show_sql: true
+          format_sql: true
+          use_sql_comments: true
+          current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+      hibernate:
+        dll-auto: validate
+  liquibase:
+    changeLog: classpath:db/db.changelog-master.yml
+  mail:
+    protocol: smtp
+    port: 587
+    host: test.br
+    username: test
+    password: test
+    properties:
+      mail:
+        from: test@test.br
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+
+springdoc:
+  swagger-ui:
+    enabled: false
+  api-docs:
+    enabled: false
+
+aws:
+  credentials:
+    accessKey: test
+    secretKey: test
+
+cognito:
+  credentials:
+    accessKey: test
+    secretKey: test
+  endpoint:
+    auth: test
+    token: test
+    authorize: test
+  redirect-uri: test
+  region: sa-east-1
+  app:
+    client-id: test
+    secret: test
+    pool-id: test
+    keys: test
+
+cloudfront:
+  domain: test
+
+google:
+  recaptcha:
+    secret:
+      v2: test
+
+s3:
+  region: ${AWS_S3_REGION}
+  customEndpoint: ${S3_CUSTOM_ENDPOINT}
+  buckets:
+    - ${AWS_S3_PRIVATE_DOCS_NAME}
+  credentials:
+    accessKey: ${S3_ACCESS_KEY_ID}
+    secretKey: ${S3_SECRET_ACCESS_KEY}

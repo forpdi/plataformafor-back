@@ -1,0 +1,187 @@
+application:
+  name: ${PROJECT_NAME:forpdi-backend}
+  env:
+    debug: ${ENV_DEBUG:false}
+  timeout:
+    reset-password: 14400
+
+server:
+  port: ${SERVER_PORT:8080}
+  error:
+    include-message: always
+    include-binding-errors: always
+  servlet:
+     contextPath: /forpdi
+
+management:
+  health:
+    db:
+      enabled: true
+    defaults:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: 'health, prometheus'
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  server:
+    port: 7188
+
+logging:
+  level:
+    root: INFO
+    liquibase : INFO
+    org:
+      springframework:
+        security: INFO
+      keycloak: INFO
+      hibernate:
+        SQL: INFO
+        type:
+          descriptor:
+            sql:
+              BasicBinder: INFO
+
+security:
+  aud: ${SECURITY_JWT_AUDIENCE}
+  iss: ${SECURITY_JWT_ISSUER:auth-service}
+  use-local-processor: ${ENV_DEBUG:false}
+  jwt:
+    key: ${SECURITY_JWT_KEY}
+    refresh-key: ${SECURITY_REFRESH_JWT_KEY}
+    expiration-sec: ${SECURITY_JWT_EXPIRATION_SEC:300}
+    refresh-expiration-sec: ${SECURITY_REFRESH_JWT_EXPIRATION_SEC:2592000}
+
+spring:
+  application:
+    name: ${application.name}
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
+  datasource:
+    url: jdbc:mysql://${DATABASE_HOST_PORT}/${DATABASE_NAME}?autoReconnect=true&useSSL=false&serverTimezone=America/Sao_Paulo
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+
+    hikari:
+      auto-commit: false
+      connection-init-sql: SELECT 1;
+      connection-test-query: SELECT 1;
+      maximum-pool-size: 10
+      connection-timeout: 30000
+      idleTimeout: 30000
+      minimumIdle: ${IDLE_CONNECTION:10}
+      isolate-internal-queries: true
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: false
+        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
+    generate-ddl: false
+
+  liquibase:
+    changeLog: classpath:db/db.changelog-master.yml
+
+  main:
+    allow-bean-definition-overriding: true
+    
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+  http:
+    converters:
+      preferred-json-mapper: gson
+
+aws:
+  credentials:
+    accessKey: ${AWS_ACCESS_KEY_ID}
+    secretKey: ${AWS_SECRET_ACCESS_KEY}
+
+cloudfront:
+  domain: ${CLOUDFRONT_DOMAIN}
+
+google:
+  recaptcha:
+    secret:
+      v2: ${RECAPTCHA_SECRET_KEY_V2}
+    disabled: ${RECAPTCHA_DISABLED}
+
+
+s3:
+  region: ${AWS_S3_REGION}
+  bucket: ${AWS_S3_PRIVATE_DOCS_NAME}
+  credentials:
+    accessKey: ${aws.credentials.accessKey}
+    secretKey: ${aws.credentials.secretKey}
+
+springdoc:
+  swagger-ui:
+    enabled: ${SPRINGDOC_SWAGGER_UI_ENABLED:false}
+    default-model-expand-depth: 0
+    doc-expansion: none
+    disable-swagger-default-url: true
+    display-request-duration: true
+    show-extensions: true
+    show-common-extensions: true
+    syntax-highlight:
+      theme: monokai
+    use-root-path: true
+    csrf:
+      enabled: true
+  show-actuator: false
+  writer-with-default-pretty-printer: true
+  api-docs:
+    enabled: ${SPRINGDOC_API_DOCS_ENABLED:false}
+    groups:
+      enabled: true
+    resolve-schema-properties: true
+  paths-to-exclude:
+    - /error
+
+
+
+# platfor variables
+sys:
+  baseurl: ${SYS_BASEURL:http://localhost:8080/forpdi/}
+  frontendUrl: ${SYS_FRONTENDURL:http://localhost:8081}
+
+build:
+  version: ${BUILD_VERSION:v-localhost}
+
+smtp:
+  from:
+    name: ${SMTP_FROM_NAME:}
+    email: ${SMTP_FROM_EMAIL:}
+  host: ${SMTP_HOST:}
+  port: ${SMTP_PORT:}
+  user: ${SMTP_USER:}
+  password: ${SMTP_PASSWORD:}
+  ssl: ${SMTP_SSL:false}
+  tls: ${SMTP_TLS:true}
+
+store:
+  files: ${STORE_FILES:}
+  pdfs: ${STORE_PDFS:/tmp}
+
+crypt:
+  key: ${CRYPT_KEY}
+  
