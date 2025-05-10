@@ -1,42 +1,76 @@
-#### Aviso
+## Plataforma For open source para:
 
-Para subir a Plataforma-For por completo utilize o docker-compose na raiz do projeto.
+- **ForPDI**: criação, gerenciamento, acompanhamento e divulgação de Planos de Desenvolvimento Institucional (PDI).
+- **ForRisco**: criação, gerenciamento, acompanhamento e divulgação de Planos de Gestão de  Riscos.
 
-#### Construindo somente a imagem Docker do Backend
-Para construir o projeto com o Docker, se faz necessário ter no mínimo a versão 18.06 ou superior. 
+Para mais informações, acesse: [https://www.gov.br/mec/pt-br/plataformafor/](https://www.gov.br/mec/pt-br/plataformafor/)
 
-Pré condição para iniciar o container:
-  - Ter a instância do database iniciada
-  - Configurar o arquivo conf/docker.dev.properties com as propriedades de banco de dados.
+## Instalação com Docker
 
-Execute os seguintes comandos dentro da pasta backend-java/ :
- - docker build -t platfor-backend .
- - docker run -it --name platfor-backend -p 8080:8080 -p 8009:8009 platfor-backend
+Pré-requisito: tenha o **docker** e o **docker compose** instalados.
+#### Estrutura do projeto
+Faça o clone dos repositórios **plataformafor-back** e **plataformafor-front** disponíveis em: [https://github.com/forpdi](https://github.com/forpdi)
 
-Pronto! Seu container com a aplicação referente ao backend esta disponivel.
-Para testar acesse em: http://localhost:8080/forpdi/environment
+A estrutura do projeto deve ficar da seguinte forma:
 
-### Atualização do repositório
+plataforma-for/
+├── plataformafor-back/
+└── plataformafor-front/
 
-Para atualizar o repositório do back-end é necessário substituir apenas o conteúdo da pasta `src` e os arquivos de properties na pasta `conf` caso seja adicionado novas configurações ao projeto.
+#### Variáveis de ambiente do backend
 
-Os comandos a seguir mostram o passo a passo da atualização da pasta `src`:
+Defina as seguintes variáveis de ambiente:
+| Variável                    | descrição                                                          |
+|-----------------------------|--------------------------------------------------------------------|
+| DATABASE_ROOT_PASSWORD      | Senha do usuário root do banco de dados                            |
+| DATABASE_USERNAME           | Nome de usuário da aplicação para o banco de dados                 |
+| DATABASE_PASSWORD           | Senha do usuário da aplicação para o banco de dados                |
+| DATABASE_NAME               | Nome do banco de dados                                             |
+| DATABASE_HOST_PORT          | Host e porta do banco de dados (Ex: localhost:3306)                |
+| RECAPTCHA_DISABLED          | Flag para habilitar/desabilitar o google recaptcha (true/false)    |
+| RECAPTCHA_SECRET_KEY_V2     | Chave sercreta do google recaptcha                                 |
+| AWS_CREDENTIALS_ACCESS_KEY  | Chave AWS para acesso ao S3                                        |
+| AWS_CREDENTIALS_SECRET_KEY  | Chave secreta AWS para acesso ao S3                                |
+| AWS_S3_PRIVATE_DOCS_NAME    | Nome do bucket AWS S3 para storage de arquivos                     |
+| AWS_S3_REGION               | Região do AWS S3                                                   |
+| CRYPT_KEY                   | Chave secreta de 16 bytes para criptografia (Ex: Dn9#dO-?2Xl3L~5@) |
+| SECURITY_JWT_EXPIRATION_SEC | Quantidade de segundos para expiração do token de autenticação JWT |
+| SECURITY_JWT_KEY            | Chave secreta JWT                                                  |
+| SECURITY_REFRESH_JWT_KEY    | Chave secreta JWT para renovação do token de acesso                |
+| SYS_FRONTENDURL             | URL base de acesso ao frontend                                     |
 
-```sh
-# 1. Criar pasta para os projetos
-mkdir plat-fot
+Para outras configurações, verfique o arquivo: 
+*plataformafor-back/src/main/resources/application.yml*
 
-# 2. Clonar repositório do backend (via SSH)
-git clone ssh://git@gitlab.rnp.br:2022/platfor/backend.git
+#### Variáveis de ambiente do frontend
+Crie o arquivo **.env.production** na raiz do **plataformafor-front** e defina as seguintes variáveis de ambiente (utilize o arquivo *plataformafor-front/.env* como modelo)
 
-# 3. Clonar repositório do Github (via HTTPS)
-git clone https://github.com/forpdi/plataforma-for.git
+| Variável                     | descrição                                                          |
+|----------------------------- |--------------------------------------------------------------------|
+| REACT_APP_RECAPTCHA_KEY_V2   | Chave do google recaptcha                                          |
+| REACT_APP_RECAPTCHA_DISABLED | Flag para habilitar/desabilitar o google recaptcha (true/false)    |
 
-# 4. Atualizando backend
-rm -rf ./backend/src/*
-cp -r ./plataforma-for/backend-java/src/* ./backend/src/
+#### Subindo os serviços
 
-# 5. Versionando as alterações (Substituir COMMIT_MESSAGE)
-git add . && git commit -m "COMMIT_MESSAGE"
-git push
+Dentro do diretório **plataformafor-back**, rode o seguinte comando para subir o serviço do banco de dados com o docker compose:
 ```
+docker-compose up -d database
+```
+Aguarde um momento até que a base de dados seja inicializada e rode os comandos para subir o backend e o frontend:
+```
+docker-compose up -d backend frontend
+```
+
+#### Primeiro acesso
+A aplicação poderá ser acessada via browser na porta 80. 
+Credencias do usuário padrão:
+email: admin@forpdi.org
+senha: 12345
+
+## Stack de tecnologias utilizadas
+-   Banco de dados MySQL 5.7
+-   Backend Spring boot 2.7
+-   Frontend web desacoplado:
+    -   React.js
+    -   Backbone.js
+    -   Webpack

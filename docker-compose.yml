@@ -44,6 +44,8 @@ services:
       SERVER_PORT: ${SERVER_PORT}
     networks:
       - platfor_net
+    depends_on:
+      - database
 
 
   frontend:
