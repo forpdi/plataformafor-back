@@ -1,38 +1,69 @@
 version: "3.2"
 services:
-  forpdi-database:
+  database:
     image: mysql:5.7
+    container_name: platfor_database
     environment:
-      MYSQL_ROOT_PASSWORD: 12345
-      MYSQL_USER: platfor
-      MYSQL_PASSWORD: 12345
-      MYSQL_DATABASE: plataformafor
+      MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
+      MYSQL_USER: ${DATABASE_USERNAME}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_NAME}
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       timeout: 20s
       retries: 10
     networks:
-      - platfor-net
+      - platfor_net
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./src/main/resources/db/database_bootstrap:/docker-entrypoint-initdb.d
 
 
-  forpdi-backend:
-	build:
+  backend:
+    build:
       context: .
+    container_name: platfor_backend
     ports:
       - 8080:8080
-    env_file:
-      - .env
+    environment:
+      DATABASE_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_HOST_PORT: ${DATABASE_HOST_PORT}
+      RECAPTCHA_DISABLED: ${RECAPTCHA_DISABLED}
+      RECAPTCHA_SECRET_KEY_V2: ${RECAPTCHA_SECRET_KEY_V2}
+      AWS_CREDENTIALS_ACCESS_KEY: ${AWS_CREDENTIALS_ACCESS_KEY}
+      AWS_CREDENTIALS_SECRET_KEY: ${AWS_CREDENTIALS_SECRET_KEY}
+      AWS_S3_PRIVATE_DOCS_NAME: ${AWS_S3_PRIVATE_DOCS_NAME}
+      AWS_S3_REGION: ${AWS_S3_REGION}
+      CRYPT_KEY: ${CRYPT_KEY}
+      SECURITY_JWT_EXPIRATION_SEC: ${SECURITY_JWT_EXPIRATION_SEC}
+      SECURITY_JWT_KEY: ${SECURITY_JWT_KEY}
+      SECURITY_REFRESH_JWT_KEY: ${SECURITY_REFRESH_JWT_KEY}
+      SERVER_PORT: ${SERVER_PORT}
     networks:
-      - platfor-net
+      - platfor_net
 
-  forpdi-frontend:
-    build: ../frontend
-    image: platfor-front
+
+  frontend:
+    build: ../plataformafor-front
+    container_name: platfor_frontend
     depends_on:
-      - forpdi-backend
+      - backend
     ports:
-      - 81:80  
+      - 80:80
+      - 443:443
+    networks:
+      - platfor_net
+
+
 
 networks:
-  platfor-net:
+  platfor_net:
     driver: bridge
+
+volumes:
+  db_data:
+  gradle_cache:
+  node_modules:

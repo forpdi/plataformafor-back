@@ -97,6 +97,10 @@ sourceSets {
     }
 }
 
+tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
+    archiveFileName.set("platfor.jar")
+}
+
 tasks.withType<Test> {
     useJUnitPlatform()
     jvmArgs("-XX:+UseCompressedClassPointers -XX:+UseZGC -XX:+ZUncommit -XX:+UseDynamicNumberOfGCThreads -XX:-OmitStackTraceInFastThrow -XX:+OptimizeStringConcat -server -ea -Xms8m -XX:MaxRAMPercentage=75 -XX:+HeapDumpOnOutOfMemoryError".split(" "))

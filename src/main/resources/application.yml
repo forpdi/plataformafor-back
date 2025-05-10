@@ -113,7 +113,7 @@ spring:
 
 aws:
   credentials:
-    accessKey: ${AWS_ACCESS_KEY_ID}
+    accessKey: ${AWS_CREDENTIALS_ACCESS_KEY}
     secretKey: ${AWS_SECRET_ACCESS_KEY}
 
 cloudfront:
@@ -130,8 +130,8 @@ s3:
   region: ${AWS_S3_REGION}
   bucket: ${AWS_S3_PRIVATE_DOCS_NAME}
   credentials:
-    accessKey: ${aws.credentials.accessKey}
-    secretKey: ${aws.credentials.secretKey}
+    accessKey: ${AWS_CREDENTIALS_ACCESS_KEY}
+    secretKey: ${AWS_CREDENTIALS_SECRET_KEY}
 
 springdoc:
   swagger-ui:
