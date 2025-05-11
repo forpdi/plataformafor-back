@@ -8,16 +8,20 @@ Para mais informações, acesse: [https://www.gov.br/mec/pt-br/plataformafor/](h
 ## Instalação com Docker
 
 Pré-requisito: tenha o **docker** e o **docker compose** instalados.
-#### Estrutura do projeto
+### Estrutura do projeto
 Faça o clone dos repositórios **plataformafor-back** e **plataformafor-front** disponíveis em: [https://github.com/forpdi](https://github.com/forpdi)
 
 A estrutura do projeto deve ficar da seguinte forma:
 
+<pre>
 plataforma-for/
-├── plataformafor-back/
-└── plataformafor-front/
+|
++------plataformafor-back/
+|
++------plataformafor-front/
+</pre>
 
-#### Variáveis de ambiente do backend
+### Variáveis de ambiente do backend
 
 Defina as seguintes variáveis de ambiente:
 | Variável                    | descrição                                                          |
@@ -42,7 +46,7 @@ Defina as seguintes variáveis de ambiente:
 Para outras configurações, verfique o arquivo: 
 *plataformafor-back/src/main/resources/application.yml*
 
-#### Variáveis de ambiente do frontend
+### Variáveis de ambiente do frontend
 Crie o arquivo **.env.production** na raiz do **plataformafor-front** e defina as seguintes variáveis de ambiente (utilize o arquivo *plataformafor-front/.env* como modelo)
 
 | Variável                     | descrição                                                          |
@@ -50,7 +54,7 @@ Crie o arquivo **.env.production** na raiz do **plataformafor-front** e defina a
 | REACT_APP_RECAPTCHA_KEY_V2   | Chave do google recaptcha                                          |
 | REACT_APP_RECAPTCHA_DISABLED | Flag para habilitar/desabilitar o google recaptcha (true/false)    |
 
-#### Subindo os serviços
+### Subindo os serviços
 
 Dentro do diretório **plataformafor-back**, rode o seguinte comando para subir o serviço do banco de dados com o docker compose:
 ```
@@ -61,11 +65,15 @@ Aguarde um momento até que a base de dados seja inicializada e rode os comandos
 docker-compose up -d backend frontend
 ```
 
-#### Primeiro acesso
+## Primeiro acesso
 A aplicação poderá ser acessada via browser na porta 80. 
 Credencias do usuário padrão:
+
+<pre>
 email: admin@forpdi.org
 senha: 12345
+</pre>
+
 
 ## Stack de tecnologias utilizadas
 -   Banco de dados MySQL 5.7
