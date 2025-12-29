@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
+    http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd">
+
+    <changeSet id="V1_037" author="eduardo.sakae">
+        <sql dbms="mysql, mariadb">
+            UPDATE fpdi_budget_element target_be
+            JOIN (
+                SELECT
+                    be.id AS budget_element_id,
+                    COUNT(b.id) AS num_links_desativados
+                FROM fpdi_budget_element be
+                JOIN fpdi_budget b ON b.budgetElement_id = be.id
+                JOIN fpdi_structure_level_instance sli ON sli.id = b.levelInstance_id
+                JOIN fpdi_plans p ON p.id = sli.plan_id
+                JOIN fpdi_plan_macro pm ON pm.id = p.parent_id 
+                WHERE
+                    pm.deleted = 1
+                    AND b.deleted = 0
+                GROUP BY be.id
+            ) AS counts ON target_be.id = counts.budget_element_id
+            SET
+                target_be.linkedObjects = target_be.linkedObjects - counts.num_links_desativados;
+        </sql>
+
+        <sql dbms="mysql, mariadb">
+            UPDATE fpdi_budget_element target_be
+            JOIN (
+                SELECT
+                    be.id AS budget_element_id,
+                    SUM(IFNULL(b.committed, 0)) AS total_committed_to_revert 
+                FROM fpdi_budget_element be
+                JOIN fpdi_budget b ON b.budgetElement_id = be.id
+                JOIN fpdi_structure_level_instance sli ON sli.id = b.levelInstance_id
+                JOIN fpdi_plans p ON p.id = sli.plan_id
+                JOIN fpdi_plan_macro pm ON pm.id = p.parent_id 
+                WHERE
+                    pm.deleted = 1 
+                    AND b.deleted = 0 
+                    AND b.committed IS NOT NULL AND b.committed != 0 
+                GROUP BY be.id 
+            ) AS sums ON target_be.id = sums.budget_element_id
+            SET
+                target_be.balanceAvailable = target_be.balanceAvailable + sums.total_committed_to_revert;
+        </sql>
+
+        <sql dbms="mysql, mariadb">
+            UPDATE fpdi_budget b
+            JOIN fpdi_structure_level_instance sli ON sli.id = b.levelInstance_id
+            JOIN fpdi_plans p ON p.id = sli.plan_id
+            JOIN fpdi_plan_macro pm ON pm.id = p.parent_id 
+            SET
+                b.deleted = 1,
+                b.committed = 0
+            WHERE
+                pm.deleted = 1
+                AND b.deleted = 0;
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

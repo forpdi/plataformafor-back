@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
+    http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd ">
+
+    <changeSet id="V1_028" author="erick.alves">
+        <addColumn tableName="fpdi_company">
+            <column name="county_id" type="bigint(20)" defaultValue="5300108">
+				<constraints
+					nullable="false"
+					foreignKeyName="FK_We8RpDBw9q8tYIWBQE5YAu6w8"
+					references="fpdi_county(id)"/>
+            </column>
+        </addColumn>
+        
+        <dropNotNullConstraint tableName="fpdi_company" columnName="localization" columnDataType="varchar(255)"/>
+    </changeSet>
+</databaseChangeLog>

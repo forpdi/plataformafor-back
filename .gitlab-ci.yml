@@ -1,0 +1,7 @@
+variables:
+  IMAGE_BUILD: $CI_BUILDER_BASE_URL/gradle:8.12.1
+  IMAGE_TEST: $CI_BUILDER_BASE_URL/gradle:8.12.1
+
+include:
+  - project: ${CI_TEMPLATES_HOME}/backend
+    file: backend.yml

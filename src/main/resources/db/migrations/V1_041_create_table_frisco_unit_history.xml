@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="forpdi" id="V1_041_create_unit_history_table">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="frisco_unit_history"/>
+            </not>
+        </preConditions>
+        <createTable tableName="frisco_unit_history">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="unit_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_unit_history_unit" references="frisco_unit(id)"/>
+            </column>
+            <column name="responsible_user_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_unit_history_user" references="fpdi_user(id)"/>
+            </column>
+            <column name="changed_field" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="old_value" type="LONGTEXT"/>
+            <column name="new_value" type="LONGTEXT"/>
+            <column name="change_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="forpdi" id="V1_041_2_create_plan_risk_history_table">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="frisco_plan_risk_history"/>
+            </not>
+        </preConditions>
+        <createTable tableName="frisco_plan_risk_history">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="plan_risk_id" type="BIGINT">
+                <constraints nullable="false"
+                             foreignKeyName="fk_pr_history_planrisk"
+                             references="frisco_plan_risk(id)"/>
+            </column>
+            <column name="responsible_user_id" type="BIGINT">
+                <constraints nullable="false"
+                             foreignKeyName="fk_pr_history_user"
+                             references="fpdi_user(id)"/>
+            </column>
+            <column name="changed_field" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="old_value" type="LONGTEXT"/>
+            <column name="new_value" type="LONGTEXT"/>
+            <column name="change_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="frisco_plan_risk_history" indexName="idx_prh_plan_date">
+            <column name="plan_risk_id"/>
+            <column name="change_date"/>
+        </createIndex>
+        <createIndex tableName="frisco_plan_risk_history" indexName="idx_prh_user">
+            <column name="responsible_user_id"/>
+        </createIndex>
+        <createIndex tableName="frisco_plan_risk_history" indexName="idx_prh_field">
+            <column name="changed_field"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="forpdi" id="V1_009-create-preventive-action-history-table">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="frisco_preventive_action_history"/>
+            </not>
+        </preConditions>
+        <createTable tableName="frisco_preventive_action_history">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="preventive_action_id" type="BIGINT">
+                <constraints nullable="false"
+                             foreignKeyName="fk_pah_action"
+                             references="frisco_preventive_action(id)"/>
+            </column>
+            <column name="responsible_user_id" type="BIGINT">
+                <constraints nullable="false"
+                             foreignKeyName="fk_pah_user"
+                             references="fpdi_user(id)"/>
+            </column>
+            <column name="changed_field" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="old_value" type="LONGTEXT"/>
+            <column name="new_value" type="LONGTEXT"/>
+            <column name="change_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="frisco_preventive_action_history" indexName="idx_pah_action_date">
+            <column name="preventive_action_id"/>
+            <column name="change_date"/>
+        </createIndex>
+        <createIndex tableName="frisco_preventive_action_history" indexName="idx_pah_user">
+            <column name="responsible_user_id"/>
+        </createIndex>
+        <createIndex tableName="frisco_preventive_action_history" indexName="idx_pah_field">
+            <column name="changed_field"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="forpdi" id="V1_051-00-precheck-monitor-table">
+        <preConditions onFail="HALT">
+            <tableExists tableName="frisco_monitor"/>
+        </preConditions>
+    </changeSet>
+
+    <changeSet author="forpdi" id="V1_051-01-rename-monitor-history-table">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="frisco_monitor_history_changes"/>
+                <not>
+                    <tableExists tableName="frisco_monitoring_history"/>
+                </not>
+            </and>
+        </preConditions>
+        <renameTable
+            oldTableName="frisco_monitor_history_changes"
+            newTableName="frisco_monitoring_history"/>
+    </changeSet>
+
+    <changeSet author="forpdi" id="V1_051-02-rename-monitor-id-column">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="frisco_monitoring_history"/>
+                <columnExists tableName="frisco_monitoring_history" columnName="monitor_id"/>
+            </and>
+        </preConditions>
+        <renameColumn
+            tableName="frisco_monitoring_history"
+            oldColumnName="monitor_id"
+            newColumnName="monitoring_id"
+            columnDataType="BIGINT"/>
+    </changeSet>
+
+    <changeSet author="forpdi" id="V1_051-03-drop-old-fks">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="frisco_monitoring_history"/>
+        </preConditions>
+        <dropForeignKeyConstraint baseTableName="frisco_monitoring_history" constraintName="fk_mhc_monitor"/>
+        <dropForeignKeyConstraint baseTableName="frisco_monitoring_history" constraintName="fk_mhc_user"/>
+    </changeSet>
+
+    <changeSet author="forpdi" id="V1_051-03b-create-monitoring-history-if-missing">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="frisco_monitoring_history"/>
+            </not>
+        </preConditions>
+        <createTable tableName="frisco_monitoring_history">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="monitoring_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="responsible_user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="changed_field" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="old_value" type="LONGTEXT"/>
+            <column name="new_value" type="LONGTEXT"/>
+            <column name="change_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="forpdi" id="V1_051-04-add-correct-fks">
+        <preConditions onFail="HALT">
+            <and>
+                <tableExists tableName="frisco_monitoring_history"/>
+                <tableExists tableName="frisco_monitor"/>
+                <tableExists tableName="fpdi_user"/>
+            </and>
+        </preConditions>
+        <addForeignKeyConstraint
+            baseTableName="frisco_monitoring_history"
+            baseColumnNames="monitoring_id"
+            constraintName="fk_mh_monitor"
+            referencedTableName="frisco_monitor"
+            referencedColumnNames="id"
+            onDelete="RESTRICT"
+            onUpdate="CASCADE"/>
+        <addForeignKeyConstraint
+            baseTableName="frisco_monitoring_history"
+            baseColumnNames="responsible_user_id"
+            constraintName="fk_mh_user"
+            referencedTableName="fpdi_user"
+            referencedColumnNames="id"
+            onDelete="RESTRICT"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="forpdi" id="V1_051-05-ensure-indexes">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="frisco_monitoring_history"/>
+        </preConditions>
+        <createIndex tableName="frisco_monitoring_history" indexName="idx_mh_monitor_date">
+            <column name="monitoring_id"/>
+            <column name="change_date"/>
+        </createIndex>
+        <createIndex tableName="frisco_monitoring_history" indexName="idx_mh_user">
+            <column name="responsible_user_id"/>
+        </createIndex>
+        <createIndex tableName="frisco_monitoring_history" indexName="idx_mh_field">
+            <column name="changed_field"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

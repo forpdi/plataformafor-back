@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!--
+      Adiciona a coluna token_version à tabela de usuários,
+      somente se ela ainda não existir.
+    -->
+    <changeSet id="V1_045_add_token_version_to_user" author="forrisco">
+
+        <!--
+          Se a coluna já existir, o changeSet é marcado como executado
+          (MARK_RAN) e o addColumn não roda.
+        -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="fpdi_user" columnName="token_version"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="fpdi_user">
+            <column name="token_version" type="INT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+    </changeSet>
+</databaseChangeLog>

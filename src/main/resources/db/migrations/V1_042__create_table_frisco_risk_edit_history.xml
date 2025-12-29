@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+  <changeSet author="forrisco" id="V1_042__create_table_frisco_risk_edit_history">
+    <preConditions onFail="MARK_RAN">
+      <not><tableExists tableName="frisco_risk_edit_history"/></not>
+    </preConditions>
+
+    <createTable tableName="frisco_risk_edit_history">
+      <column name="id" type="BIGINT" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="risk_id" type="BIGINT">
+        <constraints nullable="false" foreignKeyName="fk_reh_risk" references="frisco_risk(id)"/>
+      </column>
+      <column name="responsible_user_id" type="BIGINT">
+        <constraints nullable="false" foreignKeyName="fk_reh_user" references="fpdi_user(id)"/>
+      </column>
+      <column name="changed_field" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="old_value" type="LONGTEXT"/>
+      <column name="new_value" type="LONGTEXT"/>
+      <column name="change_date" type="DATETIME">
+        <constraints nullable="false"/>
+      </column>
+      <column name="deleted" type="BOOLEAN" defaultValueBoolean="false">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <createIndex tableName="frisco_risk_edit_history" indexName="idx_reh_risk_date">
+      <column name="risk_id"/><column name="change_date"/>
+    </createIndex>
+    <createIndex tableName="frisco_risk_edit_history" indexName="idx_reh_user">
+      <column name="responsible_user_id"/>
+    </createIndex>
+    <createIndex tableName="frisco_risk_edit_history" indexName="idx_reh_field">
+      <column name="changed_field"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="forpdi" id="V1_042.2_create_contingency_history_table">
+  <preConditions onFail="MARK_RAN">
+    <not><tableExists tableName="frisco_contingency_history"/></not>
+  </preConditions>
+
+  <createTable tableName="frisco_contingency_history">
+    <column name="id" type="BIGINT" autoIncrement="true">
+      <constraints primaryKey="true" nullable="false"/>
+    </column>
+
+    <column name="contingency_id" type="BIGINT">
+      <constraints nullable="false"
+                   foreignKeyName="fk_cont_hist_cont"
+                   references="frisco_contingency(id)"/>
+    </column>
+
+    <column name="responsible_user_id" type="BIGINT">
+      <constraints nullable="false"
+                   foreignKeyName="fk_cont_hist_user"
+                   references="fpdi_user(id)"/>
+    </column>
+
+    <column name="changed_field" type="VARCHAR(255)">
+      <constraints nullable="false"/>
+    </column>
+
+    <column name="old_value" type="LONGTEXT"/>
+    <column name="new_value" type="LONGTEXT"/>
+
+    <column name="change_date" type="DATETIME">
+      <constraints nullable="false"/>
+    </column>
+
+    <column name="deleted" type="BOOLEAN" defaultValueBoolean="false">
+      <constraints nullable="false"/>
+    </column>
+  </createTable>
+
+  <createIndex tableName="frisco_contingency_history" indexName="idx_cont_hist_cont_date">
+    <column name="contingency_id"/>
+    <column name="change_date"/>
+  </createIndex>
+  <createIndex tableName="frisco_contingency_history" indexName="idx_cont_hist_user">
+    <column name="responsible_user_id"/>
+  </createIndex>
+  <createIndex tableName="frisco_contingency_history" indexName="idx_cont_hist_field">
+    <column name="changed_field"/>
+  </createIndex>
+</changeSet>
+
+<changeSet id="V1_042_3_create_table_frisco_item_historys" author="dev">
+  <preConditions onFail="MARK_RAN">
+    <not>
+      <tableExists tableName="frisco_item_history"/>
+    </not>
+  </preConditions>
+  
+  <createTable tableName="frisco_item_history">
+    <column name="id" type="BIGINT" autoIncrement="true">
+      <constraints primaryKey="true" nullable="false"/>
+    </column>
+    <column name="entity_type" type="VARCHAR(40)">
+      <constraints nullable="false"/>
+    </column>
+    <column name="entity_id" type="BIGINT">
+      <constraints nullable="false"/>
+    </column>
+    <column name="changed_field" type="VARCHAR(400)">
+      <constraints nullable="false"/>
+    </column>
+    <column name="old_value" type="LONGTEXT"/>
+    <column name="new_value" type="LONGTEXT"/>
+    <column name="responsible_user_id" type="BIGINT">
+      <constraints nullable="false"/>
+    </column>
+    <column name="responsible_user_name" type="VARCHAR(400)"/>
+    <column name="change_date" type="DATETIME">
+      <constraints nullable="false"/>
+    </column>
+    <column name="deleted" type="BOOLEAN" defaultValueBoolean="false">
+    <constraints nullable="false"/>
+    </column>
+  </createTable>
+
+  <createIndex tableName="frisco_item_history" indexName="idx_item_hist_entity">
+    <column name="entity_type"/>
+    <column name="entity_id"/>
+  </createIndex>
+  <createIndex tableName="frisco_item_history" indexName="idx_item_hist_changedate">
+    <column name="change_date"/>
+  </createIndex>
+</changeSet>
+
+</databaseChangeLog>

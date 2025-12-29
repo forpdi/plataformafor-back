@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
+    http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd ">
+
+    <changeSet id="V1_003" author="gustavo.pereira">
+        <addColumn tableName="frisco_risk">
+            <column name="manager_id" type="bigint(20)">
+                <constraints
+                    nullable="true"
+                    foreignKeyName="FK_z2jk5n6m7p8q9r0s1t3u4vwxy"
+                    references="fpdi_user(id)"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="frisco_contingency">
+            <column name="manager_id" type="bigint(20)">
+                <constraints
+                    nullable="true"
+                    foreignKeyName="FK_zm6w8f7g5k3j1h2p9n0q4rtyu"
+                    references="fpdi_user(id)"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="frisco_incident">
+            <column name="manager_id" type="bigint(20)">
+                <constraints
+                    nullable="true"
+                    foreignKeyName="FK_v6k2w7c5d3b1j0f9r4lmnopqz"
+                    references="fpdi_user(id)"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="frisco_monitor">
+            <column name="manager_id" type="bigint(20)">
+                <constraints
+                    nullable="true"
+                    foreignKeyName="FK_h5g6y7k8z1p0j3w4r9oqtsnuf"
+                    references="fpdi_user(id)"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="frisco_preventive_action">
+            <column name="manager_id" type="bigint(20)">
+                <constraints
+                    nullable="true"
+                    foreignKeyName="FK_x4b8j6w1m0v2n5g3o9kqhrztp"
+                    references="fpdi_user(id)"/>
+            </column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

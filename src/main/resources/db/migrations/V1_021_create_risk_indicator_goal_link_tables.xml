@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
+    http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd ">
+
+    <changeSet id="V1_021" author="gabriel.oliveira">
+        <createTable tableName="frisco_risk_indicators">
+			<column name="id" type="bigint(20)" autoIncrement="true" generationType="IDENTITY">
+				<constraints primaryKey="true"/>
+			</column>
+	        <column name="deleted" type="bit(1)">
+                <constraints nullable="false"/>
+	        </column>
+	        <column name="linkFPDI" type="varchar(1000)">
+                <constraints nullable="false"/>
+	        </column>
+	        <column name="name" type="varchar(1000)">
+                <constraints nullable="false"/>
+	        </column>
+	        <column name="risk_id" type="bigint(20)">
+                <constraints
+					nullable="false"
+					foreignKeyName="FK_zzgglyw3j9UyZQ5ibi0iw1ehr"
+					references="frisco_risk(id)"/>
+	        </column>
+	        <column name="structure_id" type="bigint(20)">
+                <constraints
+					nullable="false"
+					foreignKeyName="FK_v57vybsrn6orcfg3jiBZLpk7t"
+					references="fpdi_structure_level_instance(id)"/>
+	        </column>
+	    </createTable>
+	    
+	    <createTable tableName="frisco_risk_goals">
+			<column name="id" type="bigint(20)" autoIncrement="true" generationType="IDENTITY">
+				<constraints primaryKey="true"/>
+			</column>
+	        <column name="deleted" type="bit(1)">
+                <constraints nullable="false"/>
+	        </column>
+	        <column name="linkFPDI" type="varchar(1000)">
+                <constraints nullable="false"/>
+	        </column>
+	        <column name="name" type="varchar(1000)">
+                <constraints nullable="false"/>
+	        </column>
+	        <column name="risk_id" type="bigint(20)">
+                <constraints
+					nullable="false"
+					foreignKeyName="FK_zzggyt5CApUyZQ5ibi0iw1ehr"
+					references="frisco_risk(id)"/>
+	        </column>
+	        <column name="structure_id" type="bigint(20)">
+                <constraints
+					nullable="false"
+					foreignKeyName="FK_v57vybsrn6oAQ1M3jiBZLpk7t"
+					references="fpdi_structure_level_instance(id)"/>
+	        </column>
+	    </createTable>
+	    
+    </changeSet>
+</databaseChangeLog>

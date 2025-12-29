@@ -1,0 +1,14 @@
+@startuml Context Diagram
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(user, "Usuário", "Usuário que interage com o sistema.")
+System(web_system, "Plataforma FOR", "Sistema de otimização de tarefas administrativas e de gerenciamento de risco.")
+System(forpdi, "ForPDI", "Gestão de Plano de Desenvolvimento Institucional.")
+System(forrisco, "ForRisco", "Gestão de Riscos Institucionais.")
+
+Rel(user, web_system, "Usa")
+Rel(web_system, forpdi, "Usa")
+Rel(web_system, forrisco, "Usa")
+
+SHOW_LEGEND()
+@enduml

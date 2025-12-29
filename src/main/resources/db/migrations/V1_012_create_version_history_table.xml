@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
+    http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd ">
+
+	<changeSet id="V1_012" author="gabriel.oliveira">
+		<createTable tableName="fpdi_version_history">
+			<column name="id" type="bigint(20)" autoIncrement="true" generationType="IDENTITY">
+				<constraints primaryKey="true"/>
+			</column>
+			<column name="numberVersion" type="varchar(255)">
+			 <constraints nullable="false"/>
+	        </column>
+			<column name="releaseDate" type="date">
+                <constraints nullable="false"/>
+	        </column>
+	        <column name="infoFor" type="varchar(4000)">
+	        	<constraints nullable="true"/>
+	        </column>
+	        <column name="infoPdi" type="varchar(4000)">
+	        	<constraints nullable="true"/>
+	        </column>
+	        <column name="infoRisco" type="varchar(4000)">
+	        	<constraints nullable="true"/>
+	        </column>
+	        <column name="deleted" type="bool">
+	        	<constraints nullable="false"/>
+	        </column>
+	    </createTable>
+	    
+		<addUniqueConstraint
+	        columnNames="id, numberVersion"
+	        constraintName="FO_gyugyn4l998ghewewjyg32jygs"
+	        tableName="fpdi_version_history"/>
+
+	</changeSet>
+</databaseChangeLog>

@@ -1,0 +1,46 @@
+@startuml Component Frontend Diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/refs/heads/main/icons/devicons2
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!include DEVICONS/spring_original.puml
+!include DEVICONS/react_original.puml
+!include DEVICONS/babel.puml
+!include DEVICONS/webpack.puml
+!include DEVICONS/bootstrap.puml
+!include DEVICONS/jquery.puml
+
+Person(user, "Usuário", "Usuário que interage com o sistema.")
+
+System_Boundary(frontendBoundary, "Frontend") {
+  Container(spa, "Single Page Application", "React + Flux", "Interface interativa com o usuário", $sprite="react_original")
+  Container(actions, "Actions", "Flux Actions", "Envia comandos para o Dispatcher")
+  Container(dispatcher, "Dispatcher", "Flux Dispatcher", "Distribui as ações para os Stores")
+  Container(stores, "Stores", "Flux Stores", "Gerencia o estado da aplicação")
+  Container(views, "Views", "React Components", "Exibe a UI, reage às mudanças no estado")
+  Container(webpack, "Webpack", "Ferramenta de Empacotamento", "Empacota e otimiza o código JavaScript", $sprite="webpack")
+  Container(models, "Models", "Flux Models", "Define a estrutura e validação de dados")
+  Container(babel, "Babel", "Ferramenta de Transpilação", "Transpila código JavaScript moderno para versões mais compatíveis", $sprite="babel")
+  Container(bootstrap, "Bootstrap", "Framework de Design", "Fornece estrutura e estilo para a UI", $sprite="bootstrap")
+  Container(scss, "SCSS", "Pré-processador CSS", "Personaliza os estilos da aplicação", $sprite="scss_logo")
+  Container(jquery, "jQuery", "Biblioteca JavaScript", "Facilita a comunicação assíncrona", $sprite="jquery")
+}
+Container(api, "Backend", "Java e Spring Boot 2.7", "Processa a lógica de negócios, validações e regras do sistema.", $sprite="spring_original")
+
+Rel(user, spa, "Interage com a interface")
+Rel(actions, dispatcher, "Envia ações para o Dispatcher")
+Rel(dispatcher, stores, "Distribui ações para os Stores")
+Rel(stores, models, "Interage com os Models", "Validação e manipulação de dados")
+Rel_R(stores, views, "Notifica alterações no estado")
+Rel(stores, api, "Faz chamadas à API", "HTTPS/JSON")
+Rel(views, actions, "Faz chamadas à API", "HTTPS/JSON")
+Rel(spa, views, "Consome APIs", "HTTPS/JSON")
+Rel(views, spa, "Retorno para a interface")
+Rel(webpack, spa, "Empacota código", "JavaScript")
+Rel(babel, webpack, "Transpila o código", "ES6+ para ES5")
+Rel(bootstrap, spa, "Utiliza para estilo", "Componentes de UI")
+Rel(spa, scss, "Usa SCSS para customizar estilos", "CSS modular")
+Rel(spa, jquery, "Faz chamadas AJAX", "JavaScript")
+
+SHOW_LEGEND()
+@enduml

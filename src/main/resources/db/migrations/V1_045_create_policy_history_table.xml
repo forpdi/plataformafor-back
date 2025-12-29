@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+  <changeSet author="eduardo.sakae" id="V1_045-create-policy-history-table">
+    <preConditions onFail="MARK_RAN">
+      <not><tableExists tableName="frisco_policy_history"/></not>
+    </preConditions>
+
+    <createTable tableName="frisco_policy_history">
+      <column name="id" type="BIGINT" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+
+      <column name="policy_id" type="BIGINT">
+        <constraints nullable="false"
+                     foreignKeyName="fk_policy_history_policy"
+                     references="frisco_policy(id)"/>
+      </column>
+
+      <column name="responsible_user_id" type="BIGINT">
+        <constraints nullable="false"
+                     foreignKeyName="fk_policy_history_user"
+                     references="fpdi_user(id)"/>
+      </column>
+
+      <column name="changed_field" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+
+      <column name="old_value" type="LONGTEXT"/>
+      <column name="new_value" type="LONGTEXT"/>
+
+      <column name="change_date" type="DATETIME">
+        <constraints nullable="false"/>
+      </column>
+
+      <column name="deleted" type="BOOLEAN" defaultValueBoolean="false">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <createIndex tableName="frisco_policy_history" indexName="idx_policy_history_policy_date">
+      <column name="policy_id"/>
+      <column name="change_date"/>
+    </createIndex>
+    <createIndex tableName="frisco_policy_history" indexName="idx_policy_history_user">
+      <column name="responsible_user_id"/>
+    </createIndex>
+    <createIndex tableName="frisco_policy_history" indexName="idx_policy_history_field">
+      <column name="changed_field"/>
+    </createIndex>
+  </changeSet>
+
+</databaseChangeLog>

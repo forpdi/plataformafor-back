@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
+    http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd ">
+
+	<changeSet id="V1_009" author="erick.alves">
+		<createTable tableName="fpdi_goals_info">
+			<column name="id" type="bigint(20)" autoIncrement="true" generationType="IDENTITY">
+				<constraints primaryKey="true"/>
+			</column>
+			<column name="inDay" type="bigint(20)" />
+	        <column name="late" type="bigint(20)" />
+	        <column name="belowMininum" type="bigint(20)" />
+	        <column name="belowExpected" type="bigint(20)" />
+	        <column name="reached" type="bigint(20)" />
+	        <column name="aboveExpected" type="bigint(20)" />
+	        <column name="notStarted" type="bigint(20)" />
+	        <column name="finished" type="bigint(20)" />
+	        <column name="closeToMaturity" type="bigint(20)" />
+	        <column name="total" type="bigint(20)" />
+	        <column name="updatedAt" type="datetime">
+                <constraints nullable="false"/>
+	        </column>
+	        <column name="planMacro_id" type="bigint(20)">
+                <constraints
+					nullable="false"
+					foreignKeyName="FK_7bojr1hkmdvup01wwtpb1cy9r"
+					references="fpdi_plan_macro(id)"/>
+	        </column>
+	    </createTable>
+	    
+		<addUniqueConstraint
+	        columnNames="id, planMacro_id"
+	        constraintName="UK_shyez03dv36llioyiofx9ptw7"
+	        tableName="fpdi_goals_info"/>
+
+	</changeSet>
+</databaseChangeLog>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
+    http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd ">
+
+	<changeSet id="V1_016" author="erick.alves">
+		<createTable tableName="fpdi_goal_justification_history">
+			<column name="id" type="bigint(20)" autoIncrement="true" generationType="IDENTITY">
+				<constraints primaryKey="true"/>
+			</column>
+			<column name="justification" type="varchar(4000)">
+			 <constraints nullable="true"/>
+	        </column>
+			<column name="reachedValue" type="double">
+			 <constraints nullable="true"/>
+	        </column>
+			<column name="updatedAt" type="datetime">
+                <constraints nullable="false"/>
+	        </column>
+	        <column name="levelInstance_id" type="bigint(20)">
+	        	<constraints
+					nullable="false"
+  					foreignKeyName="FK_Lh3U6Z2MObKra1QTedqrDAOd0"
+					references="fpdi_structure_level_instance(id)"/>
+	        	/>
+	        </column>
+	        <column name="user_id" type="bigint(20)">
+	        	<constraints
+					nullable="false"
+  					foreignKeyName="FK_nphqvOwqwLVjfQNW1W1RY3FYR"
+					references="fpdi_user(id)"/>
+	        	/>
+	        </column>
+	    </createTable>
+	    
+		<sql dbms="mysql, mariadb"
+			endDelimiter="\nGO"
+			splitStatements="true"
+			stripComments="true">
+			insert into fpdi_goal_justification_history(justification, updatedAt, user_id, levelInstance_id)
+			(
+			  select aih.value, aih.updatedAt, aih.user_id, ai.levelInstance_id
+			  from fpdi_attribute_instance_history aih
+			  inner join fpdi_attribute_instance ai on ai.id = aih.attributeInstance_id
+			);
+		</sql>
+		
+		<sql dbms="mysql, mariadb"
+			endDelimiter="\nGO"
+			splitStatements="true"
+			stripComments="true">
+			drop table fpdi_attribute_instance_history;
+		</sql>
+	</changeSet>
+</databaseChangeLog>

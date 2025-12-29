@@ -1,0 +1,29 @@
+@startuml Container Diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/refs/heads/main/icons/devicons2
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!include DEVICONS/spring_original.puml
+!include DEVICONS/react_original.puml
+!include DEVICONS/amazonwebservices_wordmark.puml
+!include DEVICONS/mysql_wordmark.puml
+
+Person(user, "Usuário", "Usuário que manipula o sistema.")
+
+System_Boundary(c1, "Plataforma For") {
+Container(spa, "Frontend", "JavaScript e React 15.x", "A principal interface com a qual o usuário interage.", $sprite="react_original")
+Container(api, "Backend", "Java e Spring Boot 2.7", "Processa a lógica de negócios, validações e regras do sistema.", $sprite="spring_original")
+ContainerDb(db, "Banco de Dados Relacional", "MySQL 5.7.44", "Armazena dados persistentes da aplicação.", $sprite="mysql_wordmark")
+ContainerDb(s3, "Armazenamento de Arquivos", "Amazon S3", "Armazenamento de arquivos", $sprite="amazonwebservices_wordmark")
+
+}
+
+AddRelTag("external", $textColor="orange", $lineColor="orange", $lineStyle = DashedLine())
+
+Rel(user, spa, "Usa")
+Rel(spa, api, "Faz chamada de APIs", "HTTPS/JSON")
+Rel_L(api, db, "Lê e escreve em", "JDBC")
+Rel_R(api, s3, "Gerencia arquivos",  $tags="external")
+
+SHOW_LEGEND()
+@enduml

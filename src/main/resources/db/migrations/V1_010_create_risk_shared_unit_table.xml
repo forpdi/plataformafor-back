@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
+    http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd ">
+
+	<changeSet id="V1_010" author="erick.alves">
+		<createTable tableName="frisco_risk_shared_unit">
+			<column name="id" type="bigint(20)" autoIncrement="true" generationType="IDENTITY">
+				<constraints primaryKey="true"/>
+			</column>
+	        <column name="risk_id" type="bigint(20)">
+                <constraints
+					nullable="false"
+					foreignKeyName="FK_tx1ao0eeugjz192budweqcssb"
+					references="frisco_risk(id)"/>
+	        </column>
+	        <column name="unit_id" type="bigint(20)">
+                <constraints
+					nullable="false"
+					foreignKeyName="FK_fl33a1p58v0lvhxn8swolg4bm"
+					references="frisco_unit(id)"/>
+	        </column>
+	    </createTable>
+	    
+		<addUniqueConstraint
+	        columnNames="risk_id, unit_id"
+	        constraintName="UK_uqarn2ah8hm1j4dw23um9c1iy"
+	        tableName="frisco_risk_shared_unit"/>
+	</changeSet>
+</databaseChangeLog>

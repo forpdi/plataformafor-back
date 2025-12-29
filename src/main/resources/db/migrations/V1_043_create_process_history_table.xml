@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+  <changeSet author="eduardo.sakae" id="V1_043-create-process-history-table">
+    <preConditions onFail="MARK_RAN">
+      <not><tableExists tableName="frisco_process_history"/></not>
+    </preConditions>
+
+    <createTable tableName="frisco_process_history">
+      <column name="id" type="BIGINT" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+
+      <column name="process_id" type="BIGINT">
+        <constraints nullable="false"
+                     foreignKeyName="fk_ph_process"
+                     references="frisco_process(id)"/>
+      </column>
+
+      <column name="responsible_user_id" type="BIGINT">
+        <constraints nullable="false"
+                     foreignKeyName="fk_ph_user"
+                     references="fpdi_user(id)"/>
+      </column>
+
+      <column name="changed_field" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+
+      <column name="old_value" type="LONGTEXT"/>
+      <column name="new_value" type="LONGTEXT"/>
+
+      <column name="change_date" type="DATETIME">
+        <constraints nullable="false"/>
+      </column>
+
+      <column name="deleted" type="BOOLEAN" defaultValueBoolean="false">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <createIndex tableName="frisco_process_history" indexName="idx_ph_process_date">
+      <column name="process_id"/>
+      <column name="change_date"/>
+    </createIndex>
+    <createIndex tableName="frisco_process_history" indexName="idx_ph_user">
+      <column name="responsible_user_id"/>
+    </createIndex>
+    <createIndex tableName="frisco_process_history" indexName="idx_ph_field">
+      <column name="changed_field"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="forpdi" id="V1_043_2-create-incident-history-table">
+    <preConditions onFail="MARK_RAN">
+      <not><tableExists tableName="frisco_incident_history"/></not>
+    </preConditions>
+
+    <createTable tableName="frisco_incident_history">
+      <column name="id" type="BIGINT" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+
+      <column name="incident_id" type="BIGINT">
+        <constraints nullable="false"
+                     foreignKeyName="fk_ih_incident"
+                     references="frisco_incident(id)"/>
+      </column>
+
+      <column name="responsible_user_id" type="BIGINT">
+        <constraints nullable="false"
+                     foreignKeyName="fk_ih_user"
+                     references="fpdi_user(id)"/>
+      </column>
+
+      <column name="changed_field" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+
+      <column name="old_value" type="LONGTEXT"/>
+      <column name="new_value" type="LONGTEXT"/>
+
+      <column name="change_date" type="DATETIME">
+        <constraints nullable="false"/>
+      </column>
+
+      <column name="deleted" type="BOOLEAN" defaultValueBoolean="false">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <createIndex tableName="frisco_incident_history" indexName="idx_ih_incident_date">
+      <column name="incident_id"/>
+      <column name="change_date"/>
+    </createIndex>
+    <createIndex tableName="frisco_incident_history" indexName="idx_ih_user">
+      <column name="responsible_user_id"/>
+    </createIndex>
+    <createIndex tableName="frisco_incident_history" indexName="idx_ih_field">
+      <column name="changed_field"/>
+    </createIndex>
+  </changeSet>
+
+</databaseChangeLog>
